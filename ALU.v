@@ -16,7 +16,7 @@ module ALU(BusW, BusA, BusB, ALUCtrl, Zero);
     output  [n-1:0] BusW;
     input   [n-1:0] BusA, BusB;
     input   [3:0] ALUCtrl;
-    output  reg Zero;
+    output  Zero;
     
     reg     [n-1:0] BusW;
     
@@ -35,10 +35,7 @@ module ALU(BusW, BusA, BusB, ALUCtrl, Zero);
                 BusW <= #20 BusA - BusB;
             end
             `PassB: begin
-                if(BusA < BusB)
-                    BusW <= #20 64'h1;
-                else
-                    BusW <= #20 64'h0;
+                BusW <= #20 BusB;
             end
             `LSL: begin
                 BusW <= #20 BusA << BusB;
@@ -48,16 +45,18 @@ module ALU(BusW, BusA, BusB, ALUCtrl, Zero);
             end
         endcase
     end
+
+    assign Zero = (BusW == 0);
     
-    always @(BusW) begin
-        case(BusW)
-            64'h0: begin
-                Zero <=  1'b1;
-            end
-            default: begin
-                Zero <= 1'b0;
-            end
-        endcase
-    end
+    //~ always @(BusW) begin
+        //~ case(BusW)
+            //~ 64'h0: begin
+                //~ Zero <=  1'b1;
+            //~ end
+            //~ default: begin
+                //~ Zero <= 1'b0;
+            //~ end
+        //~ endcase
+    //~ end
 
 endmodule
